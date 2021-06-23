@@ -10,4 +10,9 @@ DEBUG = True
 
 
 # TODO IMPLEMENT DATABASE URL
-SQLALCHEMY_DATABASE_URI = '<Put your local database url>'
+
+# Password needed for windows to run local db
+SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:aa050@localhost:5432/fyyur'
+
+# Disable warning
+SQLALCHEMY_TRACK_MODIFICATIONS = False
