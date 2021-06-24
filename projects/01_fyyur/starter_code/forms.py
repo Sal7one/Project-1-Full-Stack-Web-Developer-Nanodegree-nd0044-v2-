@@ -4,6 +4,12 @@ from flask_wtf import Form
 from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField
 from wtforms import validators
 from wtforms.validators import DataRequired, AnyOf, Regexp, URL, ValidationError, regexp
+import re
+
+def phonehandler(theform, field):
+    if not re.search(r"^[0-9]*$", field.data):
+            raise ValidationError("Digits only please")
+
 
 class ShowForm(Form):
     artist_id = StringField(
@@ -85,7 +91,7 @@ class VenueForm(Form):
         'address', validators=[DataRequired()]
     )
     phone = StringField(
-        'phone', validators=[DataRequired()] 
+        'phone', validators=[DataRequired(), phonehandler] 
     )
     image_link = StringField(
         'image_link'
@@ -195,7 +201,7 @@ class ArtistForm(Form):
     )
     phone = StringField(
         # TODO implement validation logic for state
-        'phone', validators=[DataRequired()] 
+        'phone', validators=[DataRequired(),phonehandler] 
     )
     image_link = StringField(
         'image_link'
@@ -226,7 +232,7 @@ class ArtistForm(Form):
      )
     facebook_link = StringField(
         # TODO implement enum restriction
-        'facebook_link', validators=[URL()]
+        'facebook_link', validators=[URL(), ]
      )
 
     website_link = StringField(
