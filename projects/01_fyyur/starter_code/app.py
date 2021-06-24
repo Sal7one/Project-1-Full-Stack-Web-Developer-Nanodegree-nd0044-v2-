@@ -166,14 +166,41 @@ def search_venues():
     # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
     # seach for Hop should return "The Musical Hop".
     # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
-    response = {
-        "count": 1,
-        "data": [{
-            "id": 2,
-            "name": "The Dueling Pianos Bar",
-            "num_upcoming_shows": 0,
-        }]
-    }
+
+
+    user_search = request.form.get('search_term', '')
+    try:
+        search_result = db.session.query(Venue).filter(
+            Venue.name.ilike(f'%{user_search}%')).all()
+
+        search_data = []
+
+        for the_venue in search_result:
+            num_shows = db.session.query(Show).filter_by(
+                venue_id=the_venue.id).count()
+
+            an_artist = {
+                "id": the_venue.id,
+                "name": the_venue.name,
+                "num_upcoming_shows": num_shows, }
+            search_data.append(an_artist)
+
+        response = {
+            "count": len(search_result),
+            "data": search_data
+        }
+    except:
+        db.session.rollback()
+        response = {
+            "count": 0,
+            "data": [{
+                "id": 0,
+                "name": "Server Error our bad",
+                "num_upcoming_shows": 0, }]
+        }
+    finally:
+        db.session.close()
+
     return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
 
@@ -275,7 +302,7 @@ def create_venue_submission():
                          image_link=image_link,  facebook_link=facebook_link, website_link=website_link, seeking_talent=seeking_talent,
                          seeking_description=seeking_description
                          )
-        
+
         # Add to Db
         db.session.add(thevenue)
         db.session.commit()
@@ -317,6 +344,7 @@ def delete_venue(venue_id):
 #  Artists
 #  ----------------------------------------------------------------
 
+
 @app.route('/artists')
 def artists():
     # TODO: replace with real data returned from querying the database
@@ -335,14 +363,40 @@ def search_artists():
     # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
     # seach for "A" should return "Guns N Petals", "Matt Quevado", and "The Wild Sax Band".
     # search for "band" should return "The Wild Sax Band".
-    response = {
-        "count": 1,
-        "data": [{
-            "id": 4,
-            "name": "Guns N Petals",
-            "num_upcoming_shows": 0,
-        }]
-    }
+
+    user_search = request.form.get('search_term', '')
+    try:
+        search_result = db.session.query(Artist).filter(
+            Artist.name.ilike(f'%{user_search}%')).all()
+
+        search_data = []
+
+        for the_artist in search_result:
+            num_shows = db.session.query(Show).filter_by(
+                artist_id=the_artist.id).count()
+
+            an_artist = {
+                "id": the_artist.id,
+                "name": the_artist.name,
+                "num_upcoming_shows": num_shows, }
+            search_data.append(an_artist)
+
+        response = {
+            "count": len(search_result),
+            "data": search_data
+        }
+    except:
+        db.session.rollback()
+        response = {
+            "count": 0,
+            "data": [{
+                "id": 0,
+                "name": "Server Error our bad",
+                "num_upcoming_shows": 0, }]
+        }
+    finally:
+        db.session.close()
+
     return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
 
 
