@@ -2,7 +2,6 @@
 # Imports
 #----------------------------------------------------------------------------#
 
-import json
 from os import error
 from typing import final
 import dateutil.parser
@@ -12,7 +11,6 @@ from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from logging import Formatter, FileHandler
-from flask_wtf import Form
 from forms import *
 from flask_migrate import Migrate
 #----------------------------------------------------------------------------#
@@ -326,10 +324,15 @@ def delete_venue(venue_id):
 
     try:
         print("deleting id ", venue_id)
-        # Delete the show first
-        show = db.session.query(Show).get(venue_id)
-        db.session.delete(show)
 
+        try:
+            # { TRY TO } Delete the show first
+            show = db.session.query(Show).get(venue_id)
+            db.session.delete(show)
+        except:
+             db.session.rollback()
+             print("error probably it has no show")
+   
         # Delete venue now
         venue = db.session.query(Venue).get(venue_id)
         db.session.delete(venue)
