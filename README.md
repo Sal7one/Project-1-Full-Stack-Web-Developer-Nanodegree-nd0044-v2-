@@ -1,4 +1,17 @@
 ## Full Stack Web Developer Nanodegree (nd0044 v2)
+
+# API 
+https://github.com/Sal7one/nanodegree_trivia_api
+
+# AUTH
+https://github.com/Sal7one/nanodegree_coffee_shop
+
+# Kubernetes
+https://github.com/Sal7one/FSND-Deploy-Flask-App-to-Kubernetes-Using-EKS
+
+
+
+
 This is the public repository for Udacity's Full-Stack Nanodegree program. Here, you can find starter-code the following projects:
 
 * *01_fyyur/starter_code* - This is the project from C1. SQL and Data Modeling for the Web
